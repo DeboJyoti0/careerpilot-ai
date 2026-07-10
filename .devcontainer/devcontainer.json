@@ -1,0 +1,13 @@
+{
+  "name": "CareerPilot AI Flutter",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "postCreateCommand": "git clone https://github.com/flutter/flutter.git -b stable /workspaces/flutter && echo 'export PATH=/workspaces/flutter/bin:$PATH' >> ~/.bashrc",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Dart-Code.flutter",
+        "Dart-Code.dart-code"
+      ]
+    }
+  }
+}
