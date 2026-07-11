@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import '../features/splash/splash_screen.dart';
+
+import '../core/theme.dart';
 import '../features/auth/login_screen.dart';
+import '../features/splash/splash_screen.dart';
 
 class CareerPilotApp extends StatelessWidget {
   const CareerPilotApp({super.key});
@@ -10,11 +12,7 @@ class CareerPilotApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'CareerPilot AI',
-
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: Colors.blue,
-      ),
+      theme: appTheme,
 
       initialRoute: '/',
 

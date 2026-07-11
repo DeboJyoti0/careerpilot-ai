@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
-import 'app/app.dart';
 
 void main() {
-  runApp(const CareerPilotApp());
+  runApp(
+    const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: Center(
+          child: Text(
+            'CareerPilot AI',
+            style: TextStyle(fontSize: 40),
+          ),
+        ),
+      ),
+    ),
+  );
 }
