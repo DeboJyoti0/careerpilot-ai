@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'app/app.dart';
 
 void main() {
   runApp(
-    const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Center(
-          child: Text(
-            'CareerPilot AI',
-            style: TextStyle(fontSize: 40),
-          ),
-        ),
-      ),
+    const ProviderScope(
+      child: CareerPilotApp(),
     ),
   );
 }

@@ -1,25 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../core/theme.dart';
-import '../features/auth/login_screen.dart';
-import '../features/splash/splash_screen.dart';
+import '../core/router/app_router.dart';
+import '../core/theme/theme.dart';
 
 class CareerPilotApp extends StatelessWidget {
   const CareerPilotApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'CareerPilot AI',
       theme: appTheme,
-
-      initialRoute: '/',
-
-      routes: {
-        '/': (context) => const SplashScreen(),
-        '/login': (context) => const LoginScreen(),
-      },
+      routerConfig: appRouter,
     );
   }
 }

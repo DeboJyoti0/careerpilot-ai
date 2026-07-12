@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../shared/widgets/app_logo.dart';
 import '../../shared/widgets/app_text_field.dart';
 import '../../shared/widgets/primary_button.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -16,11 +17,7 @@ class LoginScreen extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0F172A),
-              Color(0xFF1E3A8A),
-              Color(0xFF2563EB),
-            ],
+            colors: [Color(0xFF0F172A), Color(0xFF1E3A8A), Color(0xFF2563EB)],
           ),
         ),
         child: SafeArea(
@@ -34,7 +31,7 @@ class LoginScreen extends StatelessWidget {
                   color: Colors.white.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(28),
                   border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.2),
+                    color: Colors.white.withValues(alpha: 0.20),
                   ),
                 ),
                 child: Column(
@@ -84,9 +81,10 @@ class LoginScreen extends StatelessWidget {
                     PrimaryButton(
                       text: "Login",
                       icon: Icons.login,
-                      onPressed: () {},
+                      onPressed: () {
+                        context.go('/dashboard');
+                      },
                     ),
-
                     const SizedBox(height: 24),
 
                     TextButton(
