@@ -1,96 +1,158 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/services/auth_service.dart';
+import '../../core/services/firestore_service.dart';
 import 'providers/resume_provider.dart';
+
+import 'widgets/personal_info_card.dart';
+import 'widgets/summary_card.dart';
+import 'widgets/education_card.dart';
+import 'widgets/experience_card.dart';
+import 'widgets/project_card.dart';
+import 'widgets/skills_card.dart';
+import 'widgets/save_button.dart';
 
 class ResumeBuilderScreen extends ConsumerStatefulWidget {
   const ResumeBuilderScreen({super.key});
 
   @override
-ConsumerState<ResumeBuilderScreen> createState() =>
-    _ResumeBuilderScreenState();
+  ConsumerState<ResumeBuilderScreen> createState() =>
+      _ResumeBuilderScreenState();
 }
 
-class _ResumeBuilderScreenState extends ConsumerState<ResumeBuilderScreen> {
-  int currentStep = 0;
+class _ResumeBuilderScreenState
+    extends ConsumerState<ResumeBuilderScreen> {
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneController = TextEditingController();
+  final addressController = TextEditingController();
+  final linkedinController = TextEditingController();
+  final githubController = TextEditingController();
+  final portfolioController = TextEditingController();
+  final summaryController = TextEditingController();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    addressController.dispose();
+    linkedinController.dispose();
+    githubController.dispose();
+    portfolioController.dispose();
+    summaryController.dispose();
+    super.dispose();
+  }
+
+  Future<void> saveResume() async {
+    final notifier = ref.read(resumeProvider.notifier);
+
+    notifier.updateName(nameController.text);
+    notifier.updateEmail(emailController.text);
+    notifier.updatePhone(phoneController.text);
+    notifier.updateAddress(addressController.text);
+    notifier.updateLinkedIn(linkedinController.text);
+    notifier.updateGithub(githubController.text);
+    notifier.updatePortfolio(portfolioController.text);
+    notifier.updateSummary(summaryController.text);
+
+    final resume = ref.read(resumeProvider);
+
+    final user = AuthService.instance.currentUser;
+
+    if (user == null) return;
+
+    await FirestoreService.instance.updateUser(
+      user.uid,
+      {
+        'resume': resume.toMap(),
+        'resumeCompleted': true,
+      },
+    );
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Resume saved successfully 🎉"),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(resumeProvider);
+    final resume = ref.watch(resumeProvider);
     final notifier = ref.read(resumeProvider.notifier);
+
     return Scaffold(
-      appBar: AppBar(title: const Text("Resume Builder"), centerTitle: true),
-      body: Stepper(
-        currentStep: currentStep,
-        onStepContinue: () {
-          if (currentStep < 3) {
-            setState(() {
-              currentStep++;
-            });
-          }
-        },
-        onStepCancel: () {
-          if (currentStep > 0) {
-            setState(() {
-              currentStep--;
-            });
-          }
-        },
-        controlsBuilder: (context, details) {
-          return Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: Row(
-              children: [
-                ElevatedButton(
-                  onPressed: details.onStepContinue,
-                  child: Text(currentStep == 3 ? "Finish" : "Next"),
-                ),
-                const SizedBox(width: 12),
-                if (currentStep > 0)
-                  OutlinedButton(
-                    onPressed: details.onStepCancel,
-                    child: const Text("Back"),
-                  ),
-              ],
+      appBar: AppBar(
+        title: const Text("Resume Builder"),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+
+            PersonalInfoCard(
+              nameController: nameController,
+              emailController: emailController,
+              phoneController: phoneController,
+              addressController: addressController,
+              linkedinController: linkedinController,
+              githubController: githubController,
+              portfolioController: portfolioController,
             ),
-          );
-        },
-        steps: [
-          Step(
-            title: Text("Personal"),
-            content: Column(
-              children: [
-                TextField(
-                  onChanged: notifier.updateName,
-                  decoration: const InputDecoration(labelText: "Full Name"),
-                ),
-                SizedBox(height: 16),
-                TextField(
-                  onChanged: notifier.updateEmail,
-                  decoration: const InputDecoration(labelText: "Email"),
-                ),
-              ],
+
+            const SizedBox(height: 20),
+
+            SummaryCard(
+              summaryController: summaryController,
+              onGenerateAI: () {},
             ),
-          ),
-          Step(
-            title: Text("Education"),
-            content: TextField(
-              decoration: InputDecoration(labelText: "Highest Qualification"),
+
+            const SizedBox(height: 20),
+
+            EducationCard(
+              education: resume.education,
+              onAdd: notifier.addEducation,
+              onRemove: notifier.removeEducation,
             ),
-          ),
-          Step(
-            title: Text("Skills"),
-            content: TextField(
-              decoration: InputDecoration(labelText: "Skills"),
+
+            const SizedBox(height: 20),
+
+            ExperienceCard(
+              experience: resume.experience,
+              onAdd: notifier.addExperience,
+              onRemove: notifier.removeExperience,
             ),
-          ),
-          Step(
-            title: Text("Experience"),
-            content: TextField(
-              decoration: InputDecoration(labelText: "Work Experience"),
+
+            const SizedBox(height: 20),
+
+            ProjectsCard(
+              projects: resume.projects,
+              onAdd: notifier.addProject,
+              onRemove: notifier.removeProject,
             ),
-          ),
-        ],
+
+            const SizedBox(height: 20),
+
+            SkillsCard(
+              skills: resume.skills,
+              onAdd: notifier.addSkill,
+              onRemove: notifier.removeSkill,
+            ),
+
+            const SizedBox(height: 30),
+
+            SaveResumeButton(
+              onPressed: saveResume,
+            ),
+
+            const SizedBox(height: 40),
+          ],
+        ),
       ),
     );
   }

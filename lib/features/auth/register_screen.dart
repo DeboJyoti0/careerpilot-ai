@@ -6,31 +6,49 @@ import '../../shared/widgets/app_logo.dart';
 import '../../shared/widgets/app_text_field.dart';
 import '../../shared/widgets/primary_button.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   bool _isLoading = false;
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
-  Future<void> _login() async {
-    if (_emailController.text.trim().isEmpty ||
-        _passwordController.text.trim().isEmpty) {
+  Future<void> _register() async {
+    if (_nameController.text.trim().isEmpty ||
+        _emailController.text.trim().isEmpty ||
+        _passwordController.text.trim().isEmpty ||
+        _confirmPasswordController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter email and password")),
+        const SnackBar(
+          content: Text("Please fill all fields"),
+        ),
+      );
+      return;
+    }
+
+    if (_passwordController.text != _confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Passwords do not match"),
+        ),
       );
       return;
     }
@@ -40,19 +58,22 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      await AuthService.instance.login(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
+      await AuthService.instance.signUp(
+  name: _nameController.text.trim(),
+  email: _emailController.text.trim(),
+  password: _passwordController.text.trim(),
+);
 
       if (mounted) {
         context.go('/dashboard');
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(e.toString())));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+          ),
+        );
       }
     } finally {
       if (mounted) {
@@ -72,7 +93,11 @@ class _LoginScreenState extends State<LoginScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF0F172A), Color(0xFF1E3A8A), Color(0xFF2563EB)],
+            colors: [
+              Color(0xFF0F172A),
+              Color(0xFF1E3A8A),
+              Color(0xFF2563EB),
+            ],
           ),
         ),
         child: SafeArea(
@@ -90,14 +115,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
                   children: [
                     const AppLogo(size: 90),
 
                     const SizedBox(height: 24),
 
                     const Text(
-                      "CareerPilot AI",
+                      "Create Account",
                       style: TextStyle(
                         fontSize: 30,
                         color: Colors.white,
@@ -108,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 10),
 
                     Text(
-                      "Build resumes that get you hired.",
+                      "Start building your dream career.",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.85),
@@ -116,7 +140,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
 
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 35),
+
+                    AppTextField(
+                      controller: _nameController,
+                      hintText: "Full Name",
+                      prefixIcon: Icons.person_outline,
+                    ),
+
+                    const SizedBox(height: 20),
 
                     AppTextField(
                       controller: _emailController,
@@ -133,6 +165,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       obscureText: true,
                     ),
 
+                    const SizedBox(height: 20),
+
+                    AppTextField(
+                      controller: _confirmPasswordController,
+                      hintText: "Confirm Password",
+                      prefixIcon: Icons.lock_outline,
+                      obscureText: true,
+                    ),
+
                     const SizedBox(height: 30),
 
                     SizedBox(
@@ -144,24 +185,21 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             )
                           : PrimaryButton(
-                              text: "Login",
-                              icon: Icons.login,
-                              onPressed: _login,
+                              text: "Create Account",
+                              icon: Icons.person_add_alt_1,
+                              onPressed: _register,
                             ),
                     ),
 
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 20),
 
                     TextButton(
                       onPressed: () {
-                        context.push('/register');
+                        context.pop();
                       },
                       child: const Text(
-                        "Create an Account",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        "Already have an account? Login",
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ],

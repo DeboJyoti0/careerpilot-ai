@@ -1,3 +1,4 @@
+import '../../core/services/auth_service.dart';
 import 'package:go_router/go_router.dart'; // Add this at the top if not already present
 import 'package:flutter/material.dart';
 
@@ -6,8 +7,21 @@ import 'widgets/dashboard_header.dart';
 import 'widgets/progress_card.dart';
 import 'widgets/quick_action_card.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  Future<void> _logout() async {
+    await AuthService.instance.logout();
+
+    if (mounted) {
+      context.go('/login');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +40,17 @@ class DashboardScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const DashboardHeader(),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Expanded(child: DashboardHeader()),
+                    IconButton(
+                      tooltip: 'Logout',
+                      icon: const Icon(Icons.logout_rounded, color: Colors.red),
+                      onPressed: _logout,
+                    ),
+                  ],
+                ),
 
                 const SizedBox(height: 30),
 
