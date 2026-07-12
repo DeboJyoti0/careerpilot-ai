@@ -1,3 +1,4 @@
+import '../../core/services/pdf_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -182,11 +183,37 @@ class _ResumeBuilderScreenState
 
             const SizedBox(height: 30),
 
-            SaveResumeButton(
-              onPressed: saveResume,
-            ),
+           Column(
+  children: [
+    SaveResumeButton(
+      onPressed: saveResume,
+    ),
 
-            const SizedBox(height: 40),
+    const SizedBox(height: 16),
+
+    SizedBox(
+      width: double.infinity,
+      height: 55,
+      child: OutlinedButton.icon(
+        icon: const Icon(Icons.picture_as_pdf),
+        label: const Text(
+          "Generate PDF",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        onPressed: () async {
+          final resume = ref.read(resumeProvider);
+
+          await PdfService.instance.previewResume(resume);
+        },
+      ),
+    ),
+  ],
+),
+
+const SizedBox(height: 40),
           ],
         ),
       ),
