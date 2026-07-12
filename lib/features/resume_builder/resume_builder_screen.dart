@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/services/auth_service.dart';
 import '../../core/services/firestore_service.dart';
+import '../../shared/models/resume_model.dart';
 import 'providers/resume_provider.dart';
 
 import 'widgets/personal_info_card.dart';
@@ -31,6 +32,42 @@ class _ResumeBuilderScreenState
   final githubController = TextEditingController();
   final portfolioController = TextEditingController();
   final summaryController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadResume();
+    });
+  }
+
+  Future<void> loadResume() async {
+    final user = AuthService.instance.currentUser;
+
+    if (user == null) return;
+
+    final data = await FirestoreService.instance.getResume(user.uid);
+
+    if (data == null) return;
+
+    final resume = ResumeModel.fromMap(data);
+
+    ref.read(resumeProvider.notifier).loadResume(resume);
+
+    nameController.text = resume.fullName;
+    emailController.text = resume.email;
+    phoneController.text = resume.phone;
+    addressController.text = resume.address;
+    linkedinController.text = resume.linkedIn;
+    githubController.text = resume.github;
+    portfolioController.text = resume.portfolio;
+    summaryController.text = resume.summary;
+
+    if (mounted) {
+      setState(() {});
+    }
+  }
 
   @override
   void dispose() {
@@ -94,7 +131,6 @@ class _ResumeBuilderScreenState
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-
             PersonalInfoCard(
               nameController: nameController,
               emailController: emailController,

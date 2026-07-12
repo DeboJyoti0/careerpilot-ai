@@ -23,7 +23,7 @@ class ResumeNotifier extends StateNotifier<ResumeModel> {
   }
 
   void updateLinkedIn(String value) {
-    state = state.copyWith(linkedin: value);
+    state = state.copyWith(linkedIn: value);
   }
 
   void updateGithub(String value) {
@@ -118,6 +118,9 @@ class ResumeNotifier extends StateNotifier<ResumeModel> {
   void clearResume() {
     state = const ResumeModel();
   }
+  void loadResume(ResumeModel resume) {
+  state = resume;
+}
 }
 
 final resumeProvider =

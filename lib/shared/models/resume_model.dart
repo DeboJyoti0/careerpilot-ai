@@ -3,15 +3,15 @@ class ResumeModel {
   final String email;
   final String phone;
   final String address;
-  final String linkedin;
+  final String linkedIn;
   final String github;
   final String portfolio;
   final String summary;
 
   final List<String> education;
   final List<String> experience;
-  final List<String> projects;
   final List<String> skills;
+  final List<String> projects;
   final List<String> certifications;
   final List<String> languages;
 
@@ -20,14 +20,14 @@ class ResumeModel {
     this.email = '',
     this.phone = '',
     this.address = '',
-    this.linkedin = '',
+    this.linkedIn = '',
     this.github = '',
     this.portfolio = '',
     this.summary = '',
     this.education = const [],
     this.experience = const [],
-    this.projects = const [],
     this.skills = const [],
+    this.projects = const [],
     this.certifications = const [],
     this.languages = const [],
   });
@@ -37,14 +37,14 @@ class ResumeModel {
     String? email,
     String? phone,
     String? address,
-    String? linkedin,
+    String? linkedIn,
     String? github,
     String? portfolio,
     String? summary,
     List<String>? education,
     List<String>? experience,
-    List<String>? projects,
     List<String>? skills,
+    List<String>? projects,
     List<String>? certifications,
     List<String>? languages,
   }) {
@@ -53,14 +53,14 @@ class ResumeModel {
       email: email ?? this.email,
       phone: phone ?? this.phone,
       address: address ?? this.address,
-      linkedin: linkedin ?? this.linkedin,
+      linkedIn: linkedIn ?? this.linkedIn,
       github: github ?? this.github,
       portfolio: portfolio ?? this.portfolio,
       summary: summary ?? this.summary,
       education: education ?? this.education,
       experience: experience ?? this.experience,
-      projects: projects ?? this.projects,
       skills: skills ?? this.skills,
+      projects: projects ?? this.projects,
       certifications: certifications ?? this.certifications,
       languages: languages ?? this.languages,
     );
@@ -72,14 +72,14 @@ class ResumeModel {
       'email': email,
       'phone': phone,
       'address': address,
-      'linkedin': linkedin,
+      'linkedIn': linkedIn,
       'github': github,
       'portfolio': portfolio,
       'summary': summary,
       'education': education,
       'experience': experience,
-      'projects': projects,
       'skills': skills,
+      'projects': projects,
       'certifications': certifications,
       'languages': languages,
     };
@@ -91,14 +91,14 @@ class ResumeModel {
       email: map['email'] ?? '',
       phone: map['phone'] ?? '',
       address: map['address'] ?? '',
-      linkedin: map['linkedin'] ?? '',
+      linkedIn: map['linkedIn'] ?? '',
       github: map['github'] ?? '',
       portfolio: map['portfolio'] ?? '',
       summary: map['summary'] ?? '',
       education: List<String>.from(map['education'] ?? []),
       experience: List<String>.from(map['experience'] ?? []),
-      projects: List<String>.from(map['projects'] ?? []),
       skills: List<String>.from(map['skills'] ?? []),
+      projects: List<String>.from(map['projects'] ?? []),
       certifications: List<String>.from(map['certifications'] ?? []),
       languages: List<String>.from(map['languages'] ?? []),
     );

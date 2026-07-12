@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../shared/models/resume_model.dart';
-
 class FirestoreService {
   FirestoreService._();
 
@@ -25,38 +23,18 @@ class FirestoreService {
       'education': [],
       'experience': [],
       'resumeCompleted': false,
-      'resume': {},
     });
   }
 
-  /// Get user data
+  /// Get complete user document
   Future<DocumentSnapshot<Map<String, dynamic>>> getUser(
     String uid,
   ) async {
     return await _firestore.collection('users').doc(uid).get();
   }
 
-  /// Update user data
-  Future<void> updateUser(
-    String uid,
-    Map<String, dynamic> data,
-  ) async {
-    await _firestore.collection('users').doc(uid).update(data);
-  }
-
-  /// Save Resume
-  Future<void> saveResume({
-    required String uid,
-    required ResumeModel resume,
-  }) async {
-    await _firestore.collection('users').doc(uid).update({
-      'resume': resume.toMap(),
-      'resumeCompleted': true,
-    });
-  }
-
-  /// Load Resume
-  Future<ResumeModel?> loadResume(String uid) async {
+  /// Get only the resume data
+  Future<Map<String, dynamic>?> getResume(String uid) async {
     final doc = await _firestore.collection('users').doc(uid).get();
 
     if (!doc.exists) {
@@ -65,12 +43,34 @@ class FirestoreService {
 
     final data = doc.data();
 
-    if (data == null || data['resume'] == null) {
+    if (data == null) {
       return null;
     }
 
-    return ResumeModel.fromMap(
-      Map<String, dynamic>.from(data['resume']),
-    );
+    if (!data.containsKey('resume')) {
+      return null;
+    }
+
+    return data['resume'] as Map<String, dynamic>?;
+  }
+
+  /// Update user document
+  Future<void> updateUser(
+    String uid,
+    Map<String, dynamic> data,
+  ) async {
+    await _firestore.collection('users').doc(uid).update(data);
+  }
+
+  /// Save resume
+  Future<void> saveResume({
+    required String uid,
+    required Map<String, dynamic> resumeData,
+  }) async {
+    await _firestore.collection('users').doc(uid).update({
+      'resume': resumeData,
+      'resumeCompleted': true,
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
   }
 }
