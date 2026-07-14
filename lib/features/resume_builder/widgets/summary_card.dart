@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 
 class SummaryCard extends StatelessWidget {
   final TextEditingController summaryController;
+
   final VoidCallback? onGenerateAI;
+
+  final bool isGenerating;
 
   const SummaryCard({
     super.key,
     required this.summaryController,
     this.onGenerateAI,
+    this.isGenerating = false,
   });
 
   @override
@@ -46,7 +50,7 @@ class SummaryCard extends StatelessWidget {
               maxLines: 6,
               decoration: InputDecoration(
                 hintText:
-                    "Example:\nPassionate Flutter Developer with experience in Firebase, Riverpod and modern UI development...",
+                    "Example:\nPassionate Flutter Developer with experience in Flutter, Firebase, Riverpod and modern UI development...",
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
                 ),
@@ -57,10 +61,24 @@ class SummaryCard extends StatelessWidget {
 
             SizedBox(
               width: double.infinity,
+              height: 50,
               child: ElevatedButton.icon(
-                onPressed: onGenerateAI,
-                icon: const Icon(Icons.auto_awesome),
-                label: const Text("Generate with AI"),
+                onPressed: isGenerating ? null : onGenerateAI,
+                icon: isGenerating
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Icon(Icons.auto_awesome),
+                label: Text(
+                  isGenerating
+                      ? "Generating..."
+                      : "Generate with AI",
+                ),
               ),
             ),
           ],

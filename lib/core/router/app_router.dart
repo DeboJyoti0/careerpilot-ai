@@ -5,6 +5,8 @@ import '../../features/auth/register_screen.dart';
 import '../../features/dashboard/dashboard_screen.dart';
 import '../../features/resume_builder/resume_builder_screen.dart';
 import '../../features/splash/splash_screen.dart';
+import '../../cover_letter/cover_letter_screen.dart';
+import '../../features/ats/ats_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
@@ -32,6 +34,16 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/resume',
       builder: (context, state) => const ResumeBuilderScreen(),
+    ),
+
+    GoRoute(
+      path: '/cover-letter',
+      builder: (context, state) => const CoverLetterScreen(),
+    ),
+
+    GoRoute(
+      path: '/ats',
+      builder: (context, state) => const AtsScreen(),
     ),
   ],
 );
